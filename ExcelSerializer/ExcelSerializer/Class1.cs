@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExcelSerializer
 {
-    public class Class1
+    public class ExcelSerializer
     {
     }
 }
