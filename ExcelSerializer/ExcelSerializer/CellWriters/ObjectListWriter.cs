@@ -30,19 +30,33 @@ namespace ExcelSerializer.CellWriters
         public void Run ()
         {
             AllValuesAreOfSameType();
-            
+
             foreach ( var _object in ObjectLists )
             {
-                var mergeDef = ExcelSerializer.GetRange(Row, Column, Row + 1, Column);
+                var objectList = _object.Value.Value as List<object>;
+
+                if ( !objectList.Any() ) continue;
+
+                var mergeDef = ExcelSerializer.GetRange(Row, Column, Row + objectList.Count, Column);
+                Console.WriteLine(mergeDef);
+
                 Sheet.Cells[mergeDef].Merge = true;
                 Sheet.Cells[Row, Column].Value = _object.Key;
                 Sheet.Cells[Row, Column].Style.Font.Bold = true;
                 Sheet.Cells[Row, Column].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
 
-                var dvw = new DirectValueWriter(_object.Value.Value as Dictionary<string, ObjectWrapper>, Sheet, Row, Column + 1);
-                dvw.Run();
+                foreach ( var item in objectList )
+                {
 
-                Row += 2;
+
+                    var dvw = new DirectValueWriter( as Dictionary<string, ObjectWrapper>, Sheet, Row, Column + 1, false);
+                    dvw.Run();
+                }
+
+
+                Row += objectList.Count;
+                Row += 1;
+
                 UpdatedColumns.Add(Column);
             }
 
@@ -52,8 +66,8 @@ namespace ExcelSerializer.CellWriters
 
         void AllValuesAreOfSameType ()
         {
-            if ( !ObjectLists.All(dv => dv.Value.ObjectType == ObjectTypes.Object) )
-                throw new Exception("some fields are not direct values");
+            if ( !ObjectLists.All(dv => dv.Value.ObjectType == ObjectTypes.ObjectList) )
+                throw new Exception("some fields are not objectList");
         }
     }
 }

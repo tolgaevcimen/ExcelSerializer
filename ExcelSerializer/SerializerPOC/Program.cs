@@ -32,10 +32,54 @@ namespace SerializerPOC
                     CreateDate = DateTime.Now.AddDays(8),
                     EndDate = DateTime.Now,
                 },
-                //Listy = new List<string>
-                //{
-                //    "1", "2", "3"
-                //}
+                Listy = new List<DownloadLink>
+                {
+                    new DownloadLink
+                    {
+                        LinkName = "1",
+                        Recipe = "11",
+                        CreateDate = DateTime.Now.AddDays(8),
+                        EndDate = DateTime.Now,
+                    },
+                    new DownloadLink
+                    {
+                        LinkName = "2",
+                        Recipe = "22",
+                        CreateDate = DateTime.Now.AddDays(8),
+                        EndDate = DateTime.Now,
+                    },
+                    new DownloadLink
+                    {
+                        LinkName = "3",
+                        Recipe = "33",
+                        CreateDate = DateTime.Now.AddDays(8),
+                        EndDate = DateTime.Now,
+                    }
+                },
+                Listy2 = new List<DownloadLink>
+                {
+                    new DownloadLink
+                    {
+                        LinkName = "111",
+                        Recipe = "1111",
+                        CreateDate = DateTime.Now.AddDays(8),
+                        EndDate = DateTime.Now,
+                    },
+                    new DownloadLink
+                    {
+                        LinkName = "222",
+                        Recipe = "2222",
+                        CreateDate = DateTime.Now.AddDays(8),
+                        EndDate = DateTime.Now,
+                    },
+                    new DownloadLink
+                    {
+                        LinkName = "333",
+                        Recipe = "3333",
+                        CreateDate = DateTime.Now.AddDays(8),
+                        EndDate = DateTime.Now,
+                    }
+                }
             };
 
             var ex = new ExcelSerializer.ExcelSerializer();
@@ -49,7 +93,8 @@ namespace SerializerPOC
             public DownloadLink ()
             {
                 this.DownloadLink_logs = new HashSet<DownloadLink_log>();
-                Listy = new List<string>();
+                Listy = new List<DownloadLink>();
+                Listy2 = new List<DownloadLink>();
             }
 
             public System.Guid Id { get; set; }
@@ -65,7 +110,8 @@ namespace SerializerPOC
             public DownloadLink AnotherLink { get; set; }
             public DownloadLink AnotherLink2 { get; set; }
             public string SentUsersByDesktopAgent { get; set; }
-            public List<string> Listy { get; set; }
+            public List<DownloadLink> Listy { get; set; }
+            public List<DownloadLink> Listy2 { get; set; }
             public virtual ICollection<DownloadLink_log> DownloadLink_logs { get; set; }
         }
         public partial class DownloadLink_log

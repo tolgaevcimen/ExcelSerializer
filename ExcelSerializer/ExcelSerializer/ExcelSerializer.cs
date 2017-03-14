@@ -52,6 +52,9 @@ namespace ExcelSerializer
                 var ow = new ObjectWriter(ve.Objects, Sheet, 4, 1);
                 ow.Run();
 
+                var olw = new ObjectListWriter(ve.ObjectLists, Sheet, 8, 1);
+                olw.Run();
+
                 Package.SaveAs(new System.IO.FileInfo(path));
 
                 ////Create excel headers

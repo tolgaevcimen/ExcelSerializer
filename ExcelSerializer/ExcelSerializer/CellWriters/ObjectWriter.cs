@@ -33,8 +33,7 @@ namespace ExcelSerializer.CellWriters
 
             //// set headers
             //Sheet.Row(Row).Style.Font.Bold = true;
-
-
+            
             foreach ( var _object in Objects )
             {
                 var mergeDef = ExcelSerializer.GetRange(Row, Column, Row + 1, Column);

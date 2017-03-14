@@ -12,11 +12,13 @@ namespace ExcelSerializer
     {
         public Dictionary<string, ObjectWrapper> DirectValues { get; set; }
         public Dictionary<string, ObjectWrapper> Objects { get; set; }
+        public Dictionary<string, ObjectWrapper> ObjectLists { get; set; }
 
         public ValueExtractor ()
         {
             DirectValues = new Dictionary<string, ObjectWrapper>();
             Objects = new Dictionary<string, ObjectWrapper>();
+            ObjectLists = new Dictionary<string, ObjectWrapper>();
         }
 
         public void Extract ( object instance )
@@ -39,29 +41,47 @@ namespace ExcelSerializer
                 }
                 else if ( t.GetInterface("ICollection") != null )
                 {
-                    //var ve = new ValueExtractor();
-                    //var collection = prop.GetValue(instance) as ICollection;
+                    var collection = prop.GetValue(instance) as ICollection;
 
-                    //foreach ( var item in collection )
-                    //{
-                    //    ve.Extract(item);
-                    //}
+                    //bool isValid = collection.Select(x => ((dynamic)x).GetType()).Distinct().Count() == 1;
+                    //if ( !isValid ) continue;
+
+                    var objectWrapper = new ObjectWrapper
+                    {
+                        ObjectType = ObjectTypes.ObjectList,
+                        Value = new List<object>()
+                    };
+
+                    var ve = new ValueExtractor();
+
+                    foreach ( var item in collection )
+                    {
+                        ( objectWrapper.Value as List<object> ).Add(item);
+                    }
+
+                    ObjectLists.Add(prop.Name, objectWrapper);
                 }
                 else if ( t.GetInterface("IEnumerable") != null )
                 {
-                    var ve = new ValueExtractor();
-                    var enumerable = prop.GetValue(instance) as IEnumerable;
+                    var enumerable = prop.GetValue(instance) as IEnumerable<object>;
+                    var isValid = enumerable.Select(x => x.GetType()).Distinct().Count() == 1;
 
-                    foreach ( var item in enumerable )
-                    {
-                        var xs = new ValueExtractor();
-                        xs.Extract(prop.GetValue(item));
-                        Objects.Add(prop.Name, new ObjectWrapper
-                        {
-                            ObjectType = ObjectTypes.Object,
-                            Value = xs.DirectValues
-                        });
-                    }
+                    if ( !isValid ) continue;
+
+                    Console.WriteLine(prop.Name);
+
+                    //var ve = new ValueExtractor();
+
+                    //foreach ( var item in enumerable )
+                    //{
+                    //    var xs = new ValueExtractor();
+                    //    xs.Extract(prop.GetValue(item));
+                    //    Objects.Add(prop.Name, new ObjectWrapper
+                    //    {
+                    //        ObjectType = ObjectTypes.Object,
+                    //        Value = xs.DirectValues
+                    //    });
+                    //}
                 }
                 // object
                 else
